@@ -23,7 +23,9 @@ namespace NEA
 		[SerializeField] float mutationProbablility = 0.01f;
 		[SerializeField] float crossoverRate = 0.5f;
 		[SerializeField] int numOfBestCarsToPick = 50;
-		[SerializeField] bool reset = false;	
+		[SerializeField] bool reset = false;
+
+		[SerializeField] List<CarController> aliveCars;
 
 		private CarController testCar;
 		private int generation = 1;
@@ -67,6 +69,29 @@ namespace NEA
 				carControllers = SortCarsByDistanceTravelled(carControllers);
 				CheckIfAllCarsDead();
 				CheckIfSolutionFound();
+				SetCameraToBestCar();
+			}
+		}
+
+		private void SetCameraToBestCar()
+		{
+			aliveCars = new List<CarController>();
+			for (int i = 0; i < carControllers.Count; i++)
+			{
+				if (!carControllers[i].isDead)
+				{
+					aliveCars.Add(carControllers[i]);
+				}
+			}
+			aliveCars.Reverse();
+			aliveCars[0].camera.SetActive(true);
+			aliveCars[0].camera.GetComponent<Camera>().enabled = true;
+			aliveCars[0].camera.GetComponent<AudioListener>().enabled = true;
+			for (int i = 1; i < aliveCars.Count; i++)
+			{
+				aliveCars[i].camera.SetActive(false);
+				aliveCars[i].camera.GetComponent<Camera>().enabled = false;
+				aliveCars[i].camera.GetComponent<AudioListener>().enabled = false;
 			}
 		}
 

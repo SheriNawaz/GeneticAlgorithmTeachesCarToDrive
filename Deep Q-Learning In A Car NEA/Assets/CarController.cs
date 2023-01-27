@@ -14,6 +14,7 @@ namespace NEA
 		public bool solutionFound = false;
 		public bool isFirstGen = true;
 		public string path = ".\\WeightsAndBiases.txt";
+		public GameObject camera;
 
 		[Header("Vehicle Parameters")]
         [SerializeField] float moveSpeed = 200f;
