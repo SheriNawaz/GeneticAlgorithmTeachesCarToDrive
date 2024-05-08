@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using Unity.VisualScripting;
 
 namespace NEA
 {
@@ -34,23 +35,29 @@ namespace NEA
 
 		private void Start()
 		{
-			if (reset)
-			{
-				PlayerPrefs.SetInt("solutionFound", 0); //Set playerpref solution found back to false
-			}
 			solutionFound = (PlayerPrefs.GetInt("solutionFound") != 0); //Set solutionFound to the value in playerprefs
-			if (!solutionFound)
-			{
-				generationText.text = "Generation: " + generation.ToString();
-				SpawnCars();
-				carControllers = FindObjectsOfType<CarController>().ToList();
-				carControllers = SortCarsByDistanceTravelled(carControllers);
-			}
-			else
+			if (solutionFound)
 			{
 				testCar = Instantiate(car, startingPos.position, Quaternion.Euler(startingRot)).GetComponent<CarController>();
 				testCar.solutionFound = true;
 			}
+		}
+
+		public void Restart()
+		{
+			
+			foreach (CarController carController in carControllers)
+			{
+				Destroy(carController.gameObject);
+			}
+			dead = 0;
+			generation = 1;
+			PlayerPrefs.SetInt("solutionFound", 0);
+			solutionFound = false;
+			generationText.text = "Generation: " + generation.ToString();
+			SpawnCars();
+			carControllers = FindObjectsOfType<CarController>().ToList();
+			carControllers = SortCarsByDistanceTravelled(carControllers);
 		}
 
 		private void SpawnCars()
